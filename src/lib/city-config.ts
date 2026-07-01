@@ -93,7 +93,7 @@ const REGION_TO_BCP47: Record<string, string> = {
 
 export function slugToBcp47(slug: string): string {
   const region = SLUG_TO_REGION[slug] ?? "AU";
-  return REGION_TO_BCP47[region] ?? "en";
+  return REGION_TO_BCP47[region] ?? "en-AU";
 }
 
 const SLUG_TO_NATIVE_LANG: Record<string, string> = {
