@@ -108,7 +108,7 @@ const SLUG_TO_NATIVE_LANG: Record<string, string> = {
   bangkok: "th",
   jakarta: "id",
   istanbul: "tr",
-  dubai: "ar", cairo: "ar",
+  dubai: "en", cairo: "en",
   hochiminhcity: "vi",
   mumbai: "hi", delhi: "hi",
 };
