@@ -126,6 +126,22 @@ function ArticlePage() {
       return data as { title?: string; dek?: string; body_html?: string };
     },
   });
+  // Fetch native-language audio URL from article_translations for AudioObject JSON-LD
+  const { data: translationAudio } = useQuery({
+    queryKey: ["article-translation-audio", article.id, lang],
+    enabled: wantTranslation,
+    staleTime: 60 * 60 * 1000,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("article_translations")
+        .select("audio_url, audio_duration_sec")
+        .eq("article_id", article.id)
+        .eq("lang", lang)
+        .maybeSingle();
+      return data;
+    },
+  });
+
   const displayTitle = (wantTranslation && tr?.title) || article.title;
   const displayDek = wantTranslation && tr?.dek != null ? tr.dek : article.dek;
   const displayBody: string = (wantTranslation && tr?.body_html) || article.body_html || "";
@@ -525,6 +541,20 @@ function ArticlePage() {
           ],
         }}
       />
+      {translationAudio?.audio_url && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "AudioObject",
+            contentUrl: translationAudio.audio_url,
+            encodingFormat: "audio/mpeg",
+            inLanguage: lang,
+            ...(translationAudio.audio_duration_sec
+              ? { duration: `PT${translationAudio.audio_duration_sec}S` }
+              : {}),
+          }}
+        />
+      )}
     </>
   );
 }
